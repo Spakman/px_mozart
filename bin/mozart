@@ -1,0 +1,21 @@
+#!/scratch/bin/ruby
+# Copyright (C) 2010 Mark Somerville <mark@scottishclimbs.com>
+# Released under the General Public License (GPL) version 3.
+# See COPYING
+
+$0 = "mozart"
+$LOAD_PATH.unshift "#{ENV["PROJECT_X_BASE"]}/lib/"
+
+TABLE_FILEPATH = "project-x-musicdb.tct"
+require "socket"
+require "spandex/card"
+require "spandex/application"
+require "mozart/card_switcher_card"
+require "mozart/mozart_application"
+
+class Mozart::MozartApplication < Spandex::Application
+  entry_point Mozart::CardSwitcherCard
+  can_run_in_background
+end
+
+Mozart::MozartApplication.new.run
