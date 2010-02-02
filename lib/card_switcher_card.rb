@@ -21,10 +21,11 @@ module Mozart
       if message.body.respond_to? :keys
         case message.body[:method]
         when "play_ids", "queue_ids"
-          card = load_card MusicCard, message.body[:params]
+          card = load_card MusicCard
         when "play_stream"
-          card = load_card InternetRadioCard, message.body[:params]
+          card = load_card InternetRadioCard
         end
+        card.send(message.body[:method].to_sym, message.body[:params])
       else
         card = load_card @latest
       end

@@ -3,10 +3,18 @@
 # See COPYING
 
 require "spandex/card"
+require "libmozart/playlist"
 
 module Mozart
   class InternetRadioCard < Spandex::Card
     top_left :back
+
+    def play_stream(stream)
+      @playlist = Mozart::Playlist.instance
+      @playlist.clear!
+      @playlist << stream
+      Mozart::Player.instance.play
+    end
 
     def show
       render %{
