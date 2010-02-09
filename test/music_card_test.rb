@@ -13,9 +13,9 @@ class Messier::Track
   def self.pk(key)
     case key
     when "1"
-      Struct.new(:url).new("file://#{File.expand_path('test/dlanod.ogg')}")
+      Struct.new(:url, :name).new("file://#{File.expand_path('test/dlanod.ogg')}", "Donald")
     when "2"
-      Struct.new(:url).new("file://#{File.expand_path('test/troosers.ogg')}")
+      Struct.new(:url, :name).new("file://#{File.expand_path('test/troosers.ogg')}", "Troosers")
     end
   end
 end
@@ -60,5 +60,15 @@ class MusicCardTest < Test::Unit::CardTestCase
     sleep 0.3
     assert_equal 2, Mozart::Playlist.instance.size
     assert Mozart::Player.instance.playing?
+  end
+
+  def test_show
+    @card.play_ids("1, 2")
+    sleep 0.5
+    @card.show
+    sleep 0.5
+    assert_button_label :top_left, "Back"
+    assert_button_label :bottom_left, "Previous"
+    assert_button_label :bottom_right, "Next"
   end
 end

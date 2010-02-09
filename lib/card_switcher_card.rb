@@ -16,8 +16,16 @@ module Mozart
   class CardSwitcherCard < Spandex::Card
     alias_method :old_receive_message, :receive_message
 
+    def initialize(socket, application)
+      super
+      @latest = MusicCard
+    end
+
+    def show; end
+
     # Choose a card to use.
     def receive_message(message)
+      @responded = true
       if message.body.respond_to? :keys
         case message.body[:method]
         when "play_ids", "queue_ids"
@@ -32,7 +40,5 @@ module Mozart
       card.receive_message(message)
       @latest = card.class
     end
-
-    def show;end
   end
 end

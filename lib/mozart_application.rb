@@ -16,6 +16,7 @@ module Mozart
       if @cards.size == 1
         if can_run_in_background?
           @socket << Honcho::Message.new(:passfocus)
+          unfocus
           card.responded = true
         else
           @socket << Honcho::Message.new(:closing)
