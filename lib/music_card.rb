@@ -13,6 +13,7 @@ module Mozart
     top_left :back
     bottom_left method: -> { Mozart::Player.instance.previous_track; show }
     bottom_right method: -> { Mozart::Player.instance.next_track; show }
+    jog_wheel_button method: -> { Mozart::Player.instance.play_or_pause; show }
 
     def play_ids(ids)
       @playlist = Mozart::Playlist.instance
@@ -58,7 +59,9 @@ module Mozart
           <button position="top_left">Back</button>
           <button position="bottom_left">Previous</button>
           <button position="bottom_right">Next</button>
-          <text y="15" halign="centre">#{@playlist.current_track.name}</text>
+          <text y="10" halign="centre">#{@playlist.current_track.name}</text>
+          <text y="20" halign="centre">#{@playlist.current_track.album}</text>
+          <text y="30" halign="centre">#{@playlist.current_track.artist}</text>
           <text y="40" width="240" halign="right">#{@playlist.position}/#{@playlist.size}</text>
         } rescue NoMethodError
       end
