@@ -78,12 +78,18 @@ class MusicCardTest < Test::Unit::CardTestCase
     assert Mozart::Player.instance.playing?
   end
 
+  def test_top_right
+    @card.top_right
+    assert_card Mozart::MusicOptionsCard
+  end
+
   def test_show
     @card.play_ids("1, 2")
     sleep 0.5
     @card.show
     sleep 0.5
     assert_button_label :top_left, "Back"
+    assert_button_label :top_right, "Options"
     assert_button_label :bottom_left, "Previous"
     assert_button_label :bottom_right, "Next"
     assert_text "Donald"

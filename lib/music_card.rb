@@ -5,12 +5,14 @@
 require "spandex/card"
 require "messier/models/track"
 require "libmozart/playlist"
+require_relative "music_options_card"
 
 Thread.abort_on_exception = true
 
 module Mozart
   class MusicCard < Spandex::Card
     top_left :back
+    top_right card: MusicOptionsCard
     bottom_left method: -> { Mozart::Player.instance.previous_track; show }
     bottom_right method: -> { Mozart::Player.instance.next_track; show }
     jog_wheel_button method: -> { Mozart::Player.instance.play_or_pause; show }
@@ -57,12 +59,14 @@ module Mozart
       render_every 1 do
         %{
           <button position="top_left">Back</button>
+          <button position="top_right">Options</button>
           <button position="bottom_left">Previous</button>
           <button position="bottom_right">Next</button>
           <text y="10" halign="centre">#{@playlist.current_track.name}</text>
           <text y="20" halign="centre">#{@playlist.current_track.album}</text>
           <text y="30" halign="centre">#{@playlist.current_track.artist}</text>
           <text y="40" width="240" halign="right">#{@playlist.position}/#{@playlist.size}</text>
+          <text y="40" x="10" width="240" halign="left">#{Mozart::Player.instance.position}/#{Mozart::Player.instance.duration}</text>
         } rescue NoMethodError
       end
     end
