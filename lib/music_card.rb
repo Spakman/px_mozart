@@ -17,6 +17,8 @@ module Mozart
     bottom_right method: -> { Mozart::Player.instance.next_track; show }
     jog_wheel_button method: -> { Mozart::Player.instance.play_or_pause; show }
 
+    IMAGE_PATH = File.expand_path(File.dirname(__FILE__) + '/img/')
+
     def play_ids(ids)
       @playlist = Mozart::Playlist.instance
       @playlist.owner = self
@@ -66,7 +68,8 @@ module Mozart
           <text y="20" halign="centre">#{@playlist.current_track.album}</text>
           <text y="30" halign="centre">#{@playlist.current_track.artist}</text>
           <text y="40" width="240" halign="right">#{@playlist.position}/#{@playlist.size}</text>
-          <text y="40" x="10" width="240" halign="left">#{Mozart::Player.instance.position}/#{Mozart::Player.instance.duration}</text>
+          <text y="40" x="25" width="225" halign="left">#{Mozart::Player.instance.position}/#{Mozart::Player.instance.duration}</text>
+          <image x="6" y="36" path="#{IMAGE_PATH}/#{Mozart::Player.instance.paused? ? 'pause' : 'play'}.png" />
         } rescue NoMethodError
       end
     end
