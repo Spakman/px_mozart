@@ -1,74 +1,76 @@
-$LOAD_PATH.unshift "#{ENV['PROJECT_X_BASE']}/lib/"
-require "spandex/assertions"
-
-module Messier
-  class Model
-    TABLE_FILEPATH = "#{File.expand_path('test/testtable')}"
-  end
-end
-
+require_relative "test_helper"
 require_relative "../lib/music_card"
 
-class Messier::Track
-  def self.pk(key)
-    case key
-    when "1"
-      Struct.new(:url, :name, :artist, :album).new("file://#{File.expand_path('test/dlanod.ogg')}", "Donald", "Spakman", "Spakwards")
-    when "2"
-      Struct.new(:url, :name).new("file://#{File.expand_path('test/troosers.ogg')}", "Troosers")
-    end
-  end
+class Mozart::MusicCard
+  attr_accessor :playlist
 end
 
 class MusicCardTest < Test::Unit::CardTestCase
   def setup
     setup_card_test Mozart::MusicCard
-    Mozart::Playlist.instance.clear!
-    Mozart::Playlist.instance.owner = "not the card instance"
+  end
+
+  def teardown
+    Mozart::Player.instance.quiesce
   end
 
   def test_play_ids
     # setup a playlist to ensure play_ids overwrites this
-    Mozart::Playlist.instance << "file://#{File.expand_path('test/donald.ogg')}"
+    @card.playlist << Struct.new(:url).new("file://#{File.expand_path('test/donald.ogg')}")
 
     @card.play_ids("1, 2")
     sleep 0.6
-    assert_equal 2, Mozart::Playlist.instance.size
+    assert_equal 2, @card.playlist.size
     assert Mozart::Player.instance.playing?
   end
 
   def test_queue_ids_already_playing_playlist
     # setup a playlist to ensure queue_ids adds to this
-    Mozart::Playlist.instance.owner = @card
-    Mozart::Playlist.instance << "file://#{File.expand_path('test/donald.ogg')}"
+    @card.playlist << Struct.new(:url).new("file://#{File.expand_path('test/donald.ogg')}")
     sleep 0.3
-    Mozart::Player.instance.play
+    Mozart::Player.instance.playlist = @card.playlist
 
     @card.queue_ids("1, 2")
     sleep 0.3
-    assert_equal 3, Mozart::Playlist.instance.size
+    assert_equal 3, @card.playlist.size
     assert Mozart::Player.instance.playing?
   end
 
-  def test_queue_ids_switching_playlist_owner
+  def test_queue_ids_to_empty_playlist_switching_playlist_owner
     # setup a playlist to ensure queue_ids adds to this
-    Mozart::Playlist.instance << "file://#{File.expand_path('test/donald.ogg')}"
+    radio_playlist = Mozart::Playlist.new("radio")
+    radio_playlist << Struct.new(:url).new("file://#{File.expand_path('test/donald.ogg')}")
     sleep 0.3
-    Mozart::Player.instance.play
+    Mozart::Player.instance.playlist = radio_playlist
 
     @card.queue_ids("1, 2")
     sleep 0.3
-    assert_equal 2, Mozart::Playlist.instance.size
+    assert_equal 2, @card.playlist.size
     assert Mozart::Player.instance.playing?
+  end
+
+  def test_queue_ids_to_populated_playlist_switching_playlist_owner
+    @card.playlist << Struct.new(:url).new("file://#{File.expand_path('test/donald.ogg')}")
+    # setup a playlist to ensure queue_ids adds to this
+    radio_playlist = Mozart::Playlist.new("radio")
+    radio_playlist << Struct.new(:url).new("file://#{File.expand_path('test/donald.ogg')}")
+    sleep 0.3
+    Mozart::Player.instance.playlist = radio_playlist
+
+    @card.queue_ids("1, 2")
+    sleep 0.3
+    assert_equal 3, @card.playlist.size
+    assert Mozart::Player.instance.playing?
+    assert @card.playlist.active?
   end
 
   def test_jog_wheel_button
     # setup a playlist to ensure queue_ids adds to this
-    Mozart::Playlist.instance << "file://#{File.expand_path('test/donald.ogg')}"
+    @card.playlist << "file://#{File.expand_path('test/donald.ogg')}"
     sleep 0.3
-    Mozart::Player.instance.play
+    Mozart::Player.instance.playlist = @card.playlist
 
-    sleep 0.3
+    sleep 3
     assert Mozart::Player.instance.playing?
     @card.jog_wheel_button
     sleep 0.2

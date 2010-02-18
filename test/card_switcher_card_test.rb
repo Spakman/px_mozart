@@ -1,5 +1,4 @@
-$LOAD_PATH.unshift "#{ENV['PROJECT_X_BASE']}/lib/"
-require "spandex/assertions"
+require_relative "test_helper"
 require "honcho/message"
 require_relative "../lib/card_switcher_card"
 
@@ -17,6 +16,10 @@ end
 class CardSwitcherCardTest < Test::Unit::CardTestCase
   def setup
     setup_card_test Mozart::CardSwitcherCard
+  end
+
+  def teardown
+    Mozart::Player.quiesce
   end
 
   def test_play_ids_switches_to_music_card

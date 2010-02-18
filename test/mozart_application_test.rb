@@ -1,6 +1,7 @@
-$LOAD_PATH.unshift "#{ENV['PROJECT_X_BASE']}/lib/"
+require_relative "test_helper"
 require "honcho/message"
 require_relative "../lib/mozart_application"
+require_relative "../lib/card_switcher_card"
 
 class Mozart::MozartApplication < Spandex::Application
   attr_reader :cards

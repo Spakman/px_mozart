@@ -19,12 +19,14 @@ module Mozart
 
     IMAGE_PATH = File.expand_path(File.dirname(__FILE__) + '/img/')
 
+    def after_initialize
+      @playlist = Mozart::Playlist.new("music")
+    end
+
     def play_ids(ids)
-      @playlist = Mozart::Playlist.instance
-      @playlist.owner = self
       @playlist.clear!
       add_to_playlist(ids)
-      @playlist.rock_and_roll
+      Mozart::Player.instance.playlist = @playlist
     end
 
     # Add ids to the playlist. Called from play_ids or queue_ids.
@@ -43,11 +45,13 @@ module Mozart
     # Enqueues ids. Will also start playing the playlist if Mozart is currently
     # playing something else.
     def queue_ids(ids)
-      @playlist = Mozart::Playlist.instance
-      if @playlist.owner != self
+      if @playlist.empty?
         play_ids(ids)
       else
         add_to_playlist(ids)
+        unless @playlist.active?
+          Mozart::Player.instance.playlist = @playlist
+        end
       end
     end
 
@@ -57,7 +61,7 @@ module Mozart
     # current_track.name while there are no tracks in the playlist. We rescue a
     # NoMethodError to get around this race condition.
     def show
-      return if @playlist.nil?
+      return if @playlist.nil? or @playlist.empty?
       render_every 1 do
         %{
           <button position="top_left">Back</button>
