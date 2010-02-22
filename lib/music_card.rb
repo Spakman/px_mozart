@@ -20,11 +20,13 @@ module Mozart
     IMAGE_PATH = File.expand_path(File.dirname(__FILE__) + '/img/')
 
     def after_initialize
-      @playlist = Mozart::Playlist.new("music")
+      @playlist = Mozart::Playlist.new
     end
 
+    # Clears the music playlist and populates it with the passed ids and starts
+    # playing.
     def play_ids(ids)
-      @playlist.clear!
+      @playlist = Mozart::Playlist.new
       add_to_playlist(ids)
       Mozart::Player.instance.playlist = @playlist
     end
@@ -61,7 +63,7 @@ module Mozart
     # current_track.name while there are no tracks in the playlist. We rescue a
     # NoMethodError to get around this race condition.
     def show
-      return if @playlist.nil? or @playlist.empty?
+      return if @playlist.nil? or @playlist.empty? or @playlist.current_track.nil?
       render_every 1 do
         %{
           <button position="top_left">Back</button>

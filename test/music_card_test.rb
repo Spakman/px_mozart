@@ -16,6 +16,7 @@ class MusicCardTest < Test::Unit::CardTestCase
 
   def test_play_ids
     # setup a playlist to ensure play_ids overwrites this
+    @card.playlist = Mozart::Playlist.new
     @card.playlist << Struct.new(:url).new("file://#{File.expand_path('test/donald.ogg')}")
 
     @card.play_ids("1, 2")
@@ -26,6 +27,7 @@ class MusicCardTest < Test::Unit::CardTestCase
 
   def test_queue_ids_already_playing_playlist
     # setup a playlist to ensure queue_ids adds to this
+    @card.playlist = Mozart::Playlist.new
     @card.playlist << Struct.new(:url).new("file://#{File.expand_path('test/donald.ogg')}")
     sleep 0.3
     Mozart::Player.instance.playlist = @card.playlist
@@ -38,7 +40,7 @@ class MusicCardTest < Test::Unit::CardTestCase
 
   def test_queue_ids_to_empty_playlist_switching_playlist_owner
     # setup a playlist to ensure queue_ids adds to this
-    radio_playlist = Mozart::Playlist.new("radio")
+    radio_playlist = Mozart::Playlist.new
     radio_playlist << Struct.new(:url).new("file://#{File.expand_path('test/donald.ogg')}")
     sleep 0.3
     Mozart::Player.instance.playlist = radio_playlist
@@ -52,7 +54,7 @@ class MusicCardTest < Test::Unit::CardTestCase
   def test_queue_ids_to_populated_playlist_switching_playlist_owner
     @card.playlist << Struct.new(:url).new("file://#{File.expand_path('test/donald.ogg')}")
     # setup a playlist to ensure queue_ids adds to this
-    radio_playlist = Mozart::Playlist.new("radio")
+    radio_playlist = Mozart::Playlist.new
     radio_playlist << Struct.new(:url).new("file://#{File.expand_path('test/donald.ogg')}")
     sleep 0.3
     Mozart::Player.instance.playlist = radio_playlist
@@ -66,6 +68,7 @@ class MusicCardTest < Test::Unit::CardTestCase
 
   def test_jog_wheel_button
     # setup a playlist to ensure queue_ids adds to this
+    @card.playlist = Mozart::Playlist.new
     @card.playlist << "file://#{File.expand_path('test/donald.ogg')}"
     sleep 0.3
     Mozart::Player.instance.playlist = @card.playlist

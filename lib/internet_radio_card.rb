@@ -9,12 +9,8 @@ module Mozart
   class InternetRadioCard < Spandex::Card
     top_left :back
 
-    def after_initialize
-      @playlist = Mozart::Playlist.new("internet radio")
-    end
-
     def play_stream(stream)
-      @playlist.clear!
+      @playlist = Mozart::Playlist.new
       @playlist << stream
       Mozart::Player.instance.playlist = @playlist
     end

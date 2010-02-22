@@ -17,7 +17,7 @@ class InternetRadioCardTest < Test::Unit::CardTestCase
 
   def test_play_stream
     # setup a playlist to ensure play_stream overwrites this
-    playlist = Mozart::Playlist.new("music")
+    playlist = Mozart::Playlist.new
     playlist << "file://#{File.expand_path('test/donald.ogg')}"
     playlist << "file://#{File.expand_path('test/troosers.ogg')}"
     Mozart::Player.instance.playlist = playlist
