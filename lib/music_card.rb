@@ -11,8 +11,10 @@ Thread.abort_on_exception = true
 
 module Mozart
   class MusicCard < Spandex::Card
+    attr_reader :playlist
+
     top_left :back
-    top_right card: MusicOptionsCard
+    top_right card: MusicOptionsCard, params: -> { @playlist }
     bottom_left method: -> { Mozart::Player.instance.previous_track; show }
     bottom_right method: -> { Mozart::Player.instance.next_track; show }
     jog_wheel_button method: -> { Mozart::Player.instance.play_or_pause; show }
