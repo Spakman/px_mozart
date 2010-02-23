@@ -16,7 +16,7 @@ module Mozart
   class CardSwitcherCard < Spandex::Card
     alias_method :old_receive_message, :receive_message
 
-    def initialize(socket, application)
+    def initialize(application)
       super
       @latest = MusicCard
     end
