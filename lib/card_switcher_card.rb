@@ -19,11 +19,12 @@ module Mozart
     def initialize(application)
       super
       @latest = MusicCard
+      @main_menu_signalled = false
     end
 
     def show; end
 
-    # Choose a card to use.
+    # Choose a card to use depending on the message[:method].
     def receive_message(message)
       @responded = true
       if message.body.respond_to? :keys
@@ -34,11 +35,21 @@ module Mozart
           card = load_card InternetRadioCard
         end
         card.send(message.body[:method].to_sym, message.body[:params])
+        signal_main_menu
       else
         card = load_card @latest
       end
       card.receive_message(message)
       @latest = card.class
+    end
+
+    # Alerts the main_menu application that Mozart is playing something. This
+    # lets main_menu know it is safe to use the "Now playing" button.
+    def signal_main_menu
+      unless @main_menu_signalled
+        `pkill -USR1 main_menu`
+        @main_menu_signalled = true
+      end
     end
   end
 end
