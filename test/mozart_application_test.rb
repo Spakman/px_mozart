@@ -5,7 +5,7 @@ require_relative "../lib/card_switcher_card"
 
 class Mozart::MozartApplication < Spandex::Application
   attr_reader :cards
-  attr_accessor :have_focus
+  attr_accessor :has_focus
   entry_point Mozart::CardSwitcherCard
   can_run_in_background
 end
@@ -35,12 +35,12 @@ class MozartApplicationTest < Test::Unit::TestCase
   end
 
   def test_previous_card_when_passfocusing_application
-    @application.have_focus = true
+    @application.has_focus = true
     @application.load_card TestCard
     sleep 0.2
     @socket.read(16)
     @application.previous_card
-    refute @application.have_focus
+    refute @application.has_focus
     assert_equal "<passfocus 0>\n", @socket.read(14)
     assert_equal 1, @application.cards.size
     assert_kind_of Mozart::CardSwitcherCard, @application.cards.last

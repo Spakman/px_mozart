@@ -19,9 +19,6 @@ module Mozart
 
     def params=(params)
       @playlist = params
-    end
-
-    def after_initialize
       @list = Spandex::List.new [
         -> { @playlist.shuffled? ? "Unshuffle" : "Shuffle" }
       ]

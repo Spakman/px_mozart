@@ -12,6 +12,7 @@ class MusicCardTest < Test::Unit::CardTestCase
 
   def teardown
     Mozart::Player.instance.quiesce
+    @application.stop_rendering
   end
 
   def test_play_ids
@@ -70,15 +71,19 @@ class MusicCardTest < Test::Unit::CardTestCase
     # setup a playlist to ensure queue_ids adds to this
     @card.playlist = Mozart::Playlist.new
     @card.playlist << "file://#{File.expand_path('test/donald.ogg')}"
+    @card.playlist << "file://#{File.expand_path('test/donald.ogg')}"
+    @card.playlist << "file://#{File.expand_path('test/donald.ogg')}"
     sleep 0.3
     Mozart::Player.instance.playlist = @card.playlist
 
-    sleep 3
+    sleep 0.5
     assert Mozart::Player.instance.playing?
     @card.jog_wheel_button
     sleep 0.2
     refute Mozart::Player.instance.playing?
-    @card.jog_wheel_button
+    Thread.new do
+      @card.jog_wheel_button
+    end
     sleep 0.2
     assert Mozart::Player.instance.playing?
   end
@@ -89,10 +94,14 @@ class MusicCardTest < Test::Unit::CardTestCase
   end
 
   def test_show
+    @card.responded = true
     @card.play_ids("1, 2")
     sleep 0.5
-    @card.show
+    Thread.new do
+      @card.show
+    end
     sleep 0.5
+
     assert_button_label :top_left, "Back"
     assert_button_label :top_right, "Options"
     assert_button_label :bottom_left, "Previous"

@@ -12,11 +12,11 @@ module Mozart
     # to ensure that CardSwitcher is the only card on the stack when passing
     # focus.
     def previous_card
+      stop_rendering
       card = @cards.pop
       if @cards.size == 1
         if can_run_in_background?
-          @socket << Honcho::Message.new(:passfocus)
-          unfocus
+          respond_pass_focus
           card.responded = true
         else
           @socket << Honcho::Message.new(:closing)
@@ -24,6 +24,7 @@ module Mozart
           exit
         end
       else
+        @cards.last.responded = false
         @cards << card
         old_previous_card
       end
