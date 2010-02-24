@@ -78,7 +78,7 @@ module Mozart
           <text y="40" width="240" halign="right">#{@playlist.position}/#{@playlist.size}</text>
           <text y="40" x="25" width="225" halign="left">#{Mozart::Player.instance.position}/#{Mozart::Player.instance.duration}</text>
           <image x="6" y="36" path="#{IMAGE_PATH}/#{Mozart::Player.instance.paused? ? 'pause' : 'play'}.png" />
-        } rescue NoMethodError
+        }
       end
     end
   end
