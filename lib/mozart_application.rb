@@ -25,8 +25,9 @@ module Mozart
         end
       else
         @cards.last.responded = false
-        @cards << card
-        old_previous_card
+        @cards.last.show
+        @cards.last.responded = true
+        @cards.last
       end
     end
   end
