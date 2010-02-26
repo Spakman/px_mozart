@@ -3,9 +3,10 @@
 # See COPYING
 
 require "spandex/list"
+require_relative "seeking_card"
 
 module Mozart
-  class MusicOptionsCard < Spandex::Card
+  class MusicOptionsCard < Spandex::ListCard
     top_left :back
 
     jog_wheel_button method: -> do
@@ -13,14 +14,16 @@ module Mozart
       when "Shuffle", "Unshuffle"
         @playlist.toggle_shuffled_state
         @application.previous_card
-        respond_keep_focus
+      when "Seek in track"
+        load_card Mozart::SeekingCard, playlist: params[:playlist]
       end
     end
 
-    def params=(params)
-      @playlist = params
+    def after_load
+      @playlist = params[:playlist]
       @list = Spandex::List.new [
-        -> { @playlist.shuffled? ? "Unshuffle" : "Shuffle" }
+        -> { @playlist.shuffled? ? "Unshuffle" : "Shuffle" },
+        "Seek in track"
       ]
     end
 

@@ -14,7 +14,7 @@ module Mozart
     attr_reader :playlist
 
     top_left :back
-    top_right card: MusicOptionsCard, params: -> { @playlist }
+    top_right card: MusicOptionsCard, params: -> { { playlist: @playlist } }
     bottom_left method: -> { Mozart::Player.instance.previous_track; show }
     bottom_right method: -> { Mozart::Player.instance.next_track; show }
     jog_wheel_button method: -> { Mozart::Player.instance.play_or_pause; show }
