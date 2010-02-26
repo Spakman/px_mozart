@@ -67,7 +67,7 @@ module Mozart
     def show
       return if @playlist.nil? or @playlist.empty? or @playlist.current_track.nil?
       render_every 1 do
-        %{
+        markup = %{
           <button position="top_left">Back</button>
           <button position="top_right">Options</button>
           <button position="bottom_left">Previous</button>
@@ -75,10 +75,14 @@ module Mozart
           <text y="10" halign="centre">#{@playlist.current_track.name}</text>
           <text y="20" halign="centre">#{@playlist.current_track.album}</text>
           <text y="30" halign="centre">#{@playlist.current_track.artist}</text>
-          <text y="40" width="240" halign="right">#{@playlist.position}/#{@playlist.size}</text>
+          <text y="40" width="225" halign="right">#{@playlist.position}/#{@playlist.size}</text>
           <text y="40" x="25" width="225" halign="left">#{Mozart::Player.instance.position}/#{Mozart::Player.instance.duration}</text>
           <image x="6" y="36" path="#{IMAGE_PATH}/#{Mozart::Player.instance.paused? ? 'pause' : 'play'}.png" />
         }
+        if @playlist.shuffled?
+          markup += %{<image x="230" y="36" path="#{IMAGE_PATH}/shuffled.png" />}
+        end
+        markup
       end
     end
   end
