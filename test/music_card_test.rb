@@ -39,7 +39,7 @@ class MusicCardTest < Test::Unit::CardTestCase
     Mozart::Player.instance.playlist = @card.playlist
 
     @card.queue_ids("1, 2")
-    sleep 0.3
+    sleep 0.8
     assert_equal 3, @card.playlist.size
     assert Mozart::Player.instance.playing?
   end

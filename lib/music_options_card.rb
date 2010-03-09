@@ -6,7 +6,9 @@ require "spandex/list"
 require_relative "seeking_card"
 
 module Mozart
-  class MusicOptionsCard < Spandex::ListCard
+  class MusicOptionsCard < Spandex::Card
+    include JogWheelListMethods
+
     top_left :back
 
     jog_wheel_button method: -> do
