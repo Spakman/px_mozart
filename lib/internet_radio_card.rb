@@ -9,9 +9,19 @@ module Mozart
   class InternetRadioCard < Spandex::Card
     top_left :back
 
-    def play_stream(stream)
+    def play_streams(streams)
       @playlist = Mozart::Playlist.new
-      @playlist << stream
+      if streams.respond_to? :split
+        streams.split(", ").each do |stream|
+          if stream.start_with? '"' and stream.end_with? '"'
+            @playlist << stream[1,stream.length-2]
+          else
+            @playlist << stream
+          end
+        end
+      else
+        @playlist << streams
+      end
       Mozart::Player.instance.playlist = @playlist
     end
 

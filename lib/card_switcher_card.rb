@@ -31,7 +31,7 @@ module Mozart
         case message.body[:method]
         when "play_ids", "queue_ids"
           card = load_card MusicCard
-        when "play_stream"
+        when "play_streams"
           card = load_card InternetRadioCard
         end
         card.send(message.body[:method].to_sym, message.body[:params])

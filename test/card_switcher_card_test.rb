@@ -33,12 +33,12 @@ class CardSwitcherCardTest < Test::Unit::CardTestCase
   end
 
   def test_play_stream_switches_to_internet_radio_card
-    @card.receive_message Honcho::Message.new(:pass_focus, method: "play_stream", params: "http://test.stream")
+    @card.receive_message Honcho::Message.new(:pass_focus, method: "play_streams", params: "http://test.stream")
     assert_kind_of Mozart::InternetRadioCard, @application.cards.last
   end
 
   def test_no_params_switches_to_last_card
-    @card.receive_message Honcho::Message.new(:pass_focus, method: "play_stream", params: "http://test.stream")
+    @card.receive_message Honcho::Message.new(:pass_focus, method: "play_streams", params: "http://test.stream")
     @card.receive_message Honcho::Message.new(:have_focus)
     assert_kind_of Mozart::InternetRadioCard, @application.cards.last
   end
