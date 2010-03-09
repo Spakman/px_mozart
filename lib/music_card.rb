@@ -13,6 +13,8 @@ module Mozart
   class MusicCard < Spandex::Card
     attr_reader :playlist
 
+    only_cache_one_instance
+
     top_left :back
     top_right card: MusicOptionsCard, params: -> { { playlist: @playlist } }
     bottom_left method: -> { Mozart::Player.instance.previous_track; show }

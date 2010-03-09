@@ -17,8 +17,7 @@ module Mozart
     end
 
     jog_wheel_button method: -> do
-      @application.previous_card
-      @application.previous_card
+      back_until Mozart::MusicCard
     end
 
     def show
